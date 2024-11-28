@@ -12,7 +12,8 @@ const authApiSlice = api.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const result = await queryFulfilled;
-          const { token, ...user } = result;
+          console.log(result.data);
+          const { token, ...user } = result.data;
           dispatch(
             setCredentials({
               user: user,
