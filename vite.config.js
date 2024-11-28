@@ -7,8 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        rewrite: (path) => path.replace(/^\/api/, ""),
-        target: "https://api.exchango.pro.et",
+        target: "http://localhost:3000",
         changeOrigin: true,
         secure: false,
       },
