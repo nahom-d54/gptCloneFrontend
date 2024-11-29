@@ -1,8 +1,11 @@
 import { AiOutlinePlus, AiOutlineSetting } from "react-icons/ai";
 import { BiLinkExternal } from "react-icons/bi";
 
-import { MdLogout } from "react-icons/md";
-import { useGetChatHistoryQuery } from "../services/chat/chatApiSlice";
+import { MdDeleteOutline, MdLogout } from "react-icons/md";
+import {
+  useDeleteChatMutation,
+  useGetChatHistoryQuery,
+} from "../services/chat/chatApiSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { BsChat } from "react-icons/bs";
 import { useDispatch } from "react-redux";
@@ -11,6 +14,7 @@ import { clearMessages } from "../features/chats/chatSlice";
 
 const Sidebar = () => {
   const { data: chatHistory } = useGetChatHistoryQuery({ page: 1, limit: 5 });
+  const [deleteChat] = useDeleteChatMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const clearChatAndNavigate = () => {
@@ -40,14 +44,24 @@ const Sidebar = () => {
 
             {chatHistory &&
               chatHistory?.[0].data.map((chat) => (
-                <Link
-                  to={`/chat/${chat._id}`}
+                <div
+                  className="hover:bg-[#2A2B32] hover:pr-4 rounded-md group flex relative"
                   key={chat._id}
-                  className="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all hover:pr-4 group"
                 >
-                  <BsChat className="h-4 w-4" />
-                  {chat.chatTitle}
-                </Link>
+                  <Link
+                    to={`/chat/${chat._id}`}
+                    key={chat._id}
+                    className="w-full flex py-3 px-3 items-center gap-3 cursor-pointer break-all"
+                  >
+                    <BsChat className="h-4 w-4" />
+                    {chat.chatTitle}
+                  </Link>
+                  <div className="absolute top-[30%] right-0 px-2  text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={() => deleteChat(chat._id)}>
+                      <MdDeleteOutline className="text-red-500 h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
               ))}
           </div>
         </div>
