@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { FiSend } from "react-icons/fi";
-import { RxHamburgerMenu } from "react-icons/rx";
 import useAutoResizeTextArea from "../hooks/useAutoResizeTextArea";
 import Message from "./Message";
 
@@ -14,18 +13,17 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDarkMode } from "../hooks/useDarkMode";
 import { FaMoon, FaSun } from "react-icons/fa";
+import { RxHamburgerMenu } from "react-icons/rx";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Chat = (props) => {
   const { toggleComponentVisibility } = props;
 
   const { chatId } = useParams();
+  const [page, setPage] = useState(1);
   const navigate = useNavigate();
   const location = useLocation();
   const [isDarkMode, toggleDarkMode] = useDarkMode();
-
-  Chat.propTypes = {
-    toggleComponentVisibility: PropTypes.func.isRequired,
-  };
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -35,10 +33,17 @@ const Chat = (props) => {
   const textAreaRef = useAutoResizeTextArea();
   const bottomOfChatRef = useRef(null);
   useGetMessagesQuery(
-    { chatId },
+    { chatId, page },
     { skip: !chatId, refetchOnMountOrArgChange: true }
   );
   const conversation = useSelector((state) => state.chat.messages);
+  const isNext = useSelector((state) => state.chat.nextPage);
+
+  const fetchNext = () => {
+    if (isNext) {
+      setPage(isNext);
+    }
+  };
 
   const [generateMessage] = useSendMessageMutation();
 
@@ -130,11 +135,20 @@ const Chat = (props) => {
         <div className="flex-1 overflow-hidden">
           <div className="h-full dark:bg-gray-800 overflow-y-auto">
             <div className="flex flex-col items-center text-sm bg-gray-800">
-              {!showEmptyChat && conversation.length > 0 ? (
+              {!showEmptyChat && conversation?.length > 0 ? (
                 <>
-                  {conversation.map((message, index) => (
-                    <Message key={index} message={message} />
-                  ))}
+                  <InfiniteScroll
+                    dataLength={conversation.length}
+                    next={fetchNext}
+                    hasMore={Boolean(isNext)}
+                    inverse={true}
+                  >
+                    {conversation &&
+                      conversation?.map((message, index) => (
+                        <Message key={index} message={message} />
+                      ))}
+                  </InfiniteScroll>
+
                   <div className="w-full h-32 md:h-48 flex-shrink-0"></div>
                   <div ref={bottomOfChatRef}></div>
                 </>
@@ -195,6 +209,10 @@ const Chat = (props) => {
       </div>
     </div>
   );
+};
+
+Chat.propTypes = {
+  toggleComponentVisibility: PropTypes.func.isRequired,
 };
 
 export default Chat;
