@@ -7,9 +7,9 @@ import { useState } from "react";
 
 const editProfileSchema = Yup.object().shape({
   previousPassword: Yup.string().required("Previous Password is required"),
-  password: Yup.string().required("Password is required"),
+  newPassword: Yup.string().required("Password is required"),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .oneOf([Yup.ref("newPassword"), null], "Passwords must match")
     .required("Confirm Password is required"),
 });
 function Profile() {
