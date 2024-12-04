@@ -61,4 +61,5 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useResendVerificationEmailMutation,
+  useChangePasswordMutation,
 } = authApiSlice;
