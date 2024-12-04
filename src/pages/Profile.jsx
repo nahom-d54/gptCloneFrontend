@@ -2,6 +2,8 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { FaUserEdit } from "react-icons/fa";
 import Toast from "../components/Toast";
+import { useChangePasswordMutation } from "../services/auth/authApiSlice";
+import { useState } from "react";
 
 const editProfileSchema = Yup.object().shape({
   previousPassword: Yup.string().required("Previous Password is required"),
@@ -11,6 +13,10 @@ const editProfileSchema = Yup.object().shape({
     .required("Confirm Password is required"),
 });
 function Profile() {
+  const [changePassword, { isSuccess, isError, isLoading }] =
+    useChangePasswordMutation();
+  const [statusMsg, setStatusMsg] = useState(null);
+
   const { values, errors, handleChange, handleSubmit } = useFormik({
     initialValues: {
       previousPassword: "",
@@ -19,7 +25,10 @@ function Profile() {
     },
     validationSchema: editProfileSchema,
     onSubmit: async (values) => {
-      console.log(values);
+      const response = await changePassword(values);
+      if (isError) {
+        setStatusMsg(response?.error?.data?.error ?? "An Error Occured");
+      }
     },
   });
 
@@ -35,7 +44,12 @@ function Profile() {
         <p className="text-gray-600 dark:text-gray-300">
           Welcome to your profile page!
         </p>
-        <Toast message="Profile Updated" type="success" />
+        {(isError || isSuccess) && statusMsg && (
+          <Toast
+            message={isError ? statusMsg : "Authentication Successfull"}
+            type={isError ? "error" : "success"}
+          />
+        )}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
           <div className="flex flex-col gap-2">
             <label
@@ -95,7 +109,7 @@ function Profile() {
             type="submit"
             className="bg-gray-500 text-white font-semibold p-2 rounded-lg"
           >
-            Update Password
+            {isLoading ? "Changing Password..." : "Change Password"}
           </button>
         </form>
       </div>
