@@ -1,10 +1,11 @@
 import App from "./App";
-import HomePage from "./pages/HomePage";
 
 import { createBrowserRouter } from "react-router-dom";
+import AuthLayout from "./layouts/AuthLayout";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import AuthLayout from "./layouts/AuthLayout";
+import HomePage from "./pages/HomePage";
 
 const AppRoutes = createBrowserRouter([
   {
