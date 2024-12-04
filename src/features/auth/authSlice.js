@@ -1,15 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
-import jwt from "jsonwebtoken";
+import decodeJWT from "../../config/jwtDecode";
 const userData = (() => {
-  const data = JSON.parse(localStorage.getItem("userData"));
-  if (data && data.token) {
-    const decoded = jwt.decode(data.token);
-    if (decoded.exp * 1000 < Date.now()) {
-      localStorage.removeItem("userData");
-      return null;
+  try {
+    const data = JSON.parse(localStorage.getItem("userData"));
+    if (data && data.token) {
+      const decoded = decodeJWT(data.token);
+      console.log(decoded);
+      if (decoded.payload.exp * 1000 < Date.now()) {
+        localStorage.removeItem("userData");
+        return null;
+      }
+      return data;
     }
+    return null;
+  } catch (error) {
+    return null;
   }
-  return null;
 })();
 
 const authSlice = createSlice({
