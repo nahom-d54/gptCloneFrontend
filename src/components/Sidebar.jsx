@@ -1,5 +1,4 @@
-import { AiOutlinePlus, AiOutlineSetting } from "react-icons/ai";
-import { BiLinkExternal } from "react-icons/bi";
+import { AiOutlinePlus } from "react-icons/ai";
 
 import { MdDeleteOutline, MdLogout } from "react-icons/md";
 import {
@@ -12,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 import { clearMessages } from "../features/chats/chatSlice";
 import { useState } from "react";
+import { FaUserEdit } from "react-icons/fa";
 
 const Sidebar = () => {
   const [params, setParams] = useState({ page: 1, limit: 5 });
@@ -30,25 +30,17 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="scrollbar-trigger flex h-full w-full flex-1 items-start border-white/20">
+    <div className="scrollbar-trigger flex h-full w-full flex-1 items-start border-white/20 dark:bg-gray-900 bg-white">
       <nav className="flex h-full flex-1 flex-col space-y-1 p-2">
         <a
           onClick={clearChatAndNavigate}
-          className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm mb-1 flex-shrink-0 border border-white/20"
+          className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-black dark:text-white cursor-pointer text-sm mb-1 flex-shrink-0 border border-white/20"
         >
           <AiOutlinePlus className="h-4 w-4" />
-          New chat
+          New Chat
         </a>
         <div className="flex-col flex-1 overflow-y-auto border-b border-white/20">
-          <div className="flex flex-col gap-2 pb-2 text-gray-100 text-sm h-full overflow-y-auto">
-            {/* <a className="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all hover:pr-4 group">
-              <FiMessageSquare className="h-4 w-4" />
-              <div className="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative">
-                New conversation
-                <div className="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]"></div>
-              </div>
-            </a> */}
-
+          <div className="flex flex-col gap-2 pb-2 text-gray-900 dark:text-gray-100 text-sm h-full overflow-y-auto">
             {isError && (
               <div className="m-2 p-2 border-red-500 text-red-500 background-transparent">
                 Something went wrong
@@ -58,7 +50,7 @@ const Sidebar = () => {
             {chatHistory &&
               chatHistory?.[0].data.map((chat) => (
                 <div
-                  className="hover:bg-[#2A2B32] hover:pr-4 rounded-md group flex relative"
+                  className="hover:bg-gray-200 dark:hover:bg-[#2A2B32] hover:pr-4 rounded-md group flex relative"
                   key={chat._id}
                 >
                   <Link
@@ -69,7 +61,7 @@ const Sidebar = () => {
                     <BsChat className="h-4 w-4" />
                     {chat.chatTitle}
                   </Link>
-                  <div className="absolute top-[30%] right-0 px-2  text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute top-[30%] right-0 px-2 text-black dark:text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => deleteChat(chat._id)}>
                       <MdDeleteOutline className="text-red-500 h-4 w-4" />
                     </button>
@@ -77,27 +69,23 @@ const Sidebar = () => {
                 </div>
               ))}
             {chatHistory && chatHistory?.[0].nextPage && (
-              <button className="mt-auto text-white bg-transparent border-gray-300 border-[1px] rounded-sm px-3 py-2">
+              <button className="mt-auto text-black dark:text-white bg-transparent border-gray-300 border-[1px] rounded-sm px-3 py-2">
                 Load More
               </button>
             )}
           </div>
         </div>
-        <a className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm">
-          <AiOutlineSetting className="h-4 w-4" />
-          Settings
-        </a>
-        <a
-          href="https://help.openai.com/en/collections/3742473-chatgpt"
-          target="_blank"
-          className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm"
+        <Link
+          to="/profile"
+          className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-black dark:text-white cursor-pointer text-sm"
         >
-          <BiLinkExternal className="h-4 w-4" />
-          Get help
-        </a>
+          <FaUserEdit className="h-4 w-4" />
+          Profile
+        </Link>
+
         <a
           onClick={() => dispatch(logout())}
-          className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm"
+          className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-black dark:text-white cursor-pointer text-sm"
         >
           <MdLogout className="h-4 w-4" />
           Log out
