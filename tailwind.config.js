@@ -29,6 +29,6 @@ export default {
       },
     },
   },
-  plugins: [import("@tailwindcss/typography"), import("tailwind-scrollbar")],
+  plugins: [import("@tailwindcss/typography")],
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
 };
