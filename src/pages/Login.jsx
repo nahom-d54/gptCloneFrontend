@@ -2,7 +2,8 @@ import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useLoginMutation } from "../services/auth/authApiSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Toast from "../components/Toast";
 
 const loginSchema = Yup.object().shape({
   email: Yup.string().email().required("Email is required"),
@@ -10,7 +11,8 @@ const loginSchema = Yup.object().shape({
 });
 
 const Login = () => {
-  const [login, { isLoading, isSuccess }] = useLoginMutation();
+  const [login, { isLoading, isSuccess, isError }] = useLoginMutation();
+  const [statusMsg, setStatusMsg] = useState(null);
   const navigate = useNavigate();
   const { values, errors, handleChange, handleSubmit } = useFormik({
     initialValues: {
@@ -18,8 +20,12 @@ const Login = () => {
       password: "",
     },
     validationSchema: loginSchema,
-    onSubmit: (values) => {
-      login(values);
+    onSubmit: async (values) => {
+      const response = await login(values);
+
+      if (isError) {
+        setStatusMsg(response?.error?.data?.error ?? "An Error Occured");
+      }
     },
   });
   useEffect(() => {
@@ -31,6 +37,12 @@ const Login = () => {
     <div
       className={`flex justify-center items-center w-full h-screen bg-gradient-to-r from-gray-100 via-gray-300 to-white dark:from-gray-700 dark:via-gray-900 dark:to-black`}
     >
+      {(isError || isSuccess) && statusMsg && (
+        <Toast
+          message={isError ? statusMsg : "Authentication Successfull"}
+          type={isError ? "error" : "success"}
+        />
+      )}
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-gray-8200 dark:bg-gray-800 p-8 rounded-lg shadow-lg text-black dark:text-white flex flex-col gap-6"

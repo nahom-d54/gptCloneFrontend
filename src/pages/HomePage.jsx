@@ -1,7 +1,10 @@
-import { useState } from "react";
-import Chat from "../components/Chat";
+import { Suspense, useState, lazy } from "react";
+
 import MobileSiderbar from "../components/MobileSidebar";
 import Sidebar from "../components/Sidebar";
+import SkeletonChatLoader from "../components/SkeletonChatLoader";
+
+const Chat = lazy(() => import("../components/Chat"));
 
 //import useAnalytics from "../hooks/useAnalytics";
 
@@ -22,7 +25,9 @@ export default function Home() {
           <Sidebar />
         </div>
       </div>
-      <Chat toggleComponentVisibility={toggleComponentVisibility} />
+      <Suspense fallback={<SkeletonChatLoader />}>
+        <Chat toggleComponentVisibility={toggleComponentVisibility} />
+      </Suspense>
     </main>
   );
 }

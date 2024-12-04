@@ -1,4 +1,6 @@
-import { addMessage, setMessages } from "../../features/chats/chatSlice";
+import { appendHistory } from "../../features/chats/chatHistorySlice";
+import { addMessage, updateMessages } from "../../features/chats/chatSlice";
+
 import { api } from "../api";
 
 const chatApiSlice = api.injectEndpoints({
@@ -18,15 +20,23 @@ const chatApiSlice = api.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const result = await queryFulfilled;
+          if (result.error) {
+            console.log(result);
+            return;
+          }
           const msgs = result?.data?.[0]?.totalCount
             ? result?.data?.[0]?.data.map((message) => message.message).flat()
             : [];
 
-          dispatch(setMessages(msgs));
+          dispatch(
+            updateMessages({
+              messages: msgs,
+              next: result?.data?.[0]?.nextPage,
+              prev: result?.data?.[0]?.prevPage,
+            })
+          );
         } catch (_error) {
           console.error(_error);
-
-          dispatch(setMessages([]));
         }
       },
     }),
@@ -48,6 +58,9 @@ const chatApiSlice = api.injectEndpoints({
               content: resultMessage.content,
             })
           );
+          if (!arg.chatId) {
+            dispatch(api.util.invalidateTags([{ type: "ChatHistory" }]));
+          }
         } catch (_error) {
           console.error(_error);
         }
@@ -62,6 +75,20 @@ const chatApiSlice = api.injectEndpoints({
           limit: payload.limit,
         },
       }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(
+            appendHistory({
+              data: result.data?.[0].data,
+              nextPage: result.data?.[0].nextPage,
+              prevPage: result.data?.[0].prevPage,
+            })
+          );
+        } catch (_error) {
+          console.error(_error);
+        }
+      },
       providesTags: (result, _err, arg) =>
         result
           ? [{ type: "ChatHistory", id: arg.page }]

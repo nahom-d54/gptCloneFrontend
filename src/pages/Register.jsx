@@ -18,7 +18,8 @@ const registerSchema = Yup.object().shape({
     .required("Confirm Password is required"),
 });
 const Register = () => {
-  const [register, { isLoading, isSuccess }] = useRegisterMutation();
+  const [register, { isLoading, isSuccess, isError }] = useRegisterMutation();
+  const [statusMsg, setStatusMsg] = useState(null);
   const { values, errors, handleChange, handleSubmit } = useFormik({
     initialValues: {
       firstName: "",
@@ -29,9 +30,13 @@ const Register = () => {
       confirmPassword: "",
     },
     validationSchema: registerSchema,
-    onSubmit: (values) => {
-      console.log(values);
-      register(values);
+    onSubmit: async (values) => {
+      const response = await register(values);
+
+      console.log(response);
+      if (isError) {
+        setStatusMsg(response?.error?.data?.error ?? "An Error Occured");
+      }
     },
   });
   const [step, setStep] = useState(1);
@@ -41,7 +46,12 @@ const Register = () => {
 
   return (
     <div className="flex justify-center items-center min-w-full h-screen bg-gradient-to-r from-gray-100 via-gray-300 to-white dark:from-gray-700 dark:via-gray-900 dark:to-black">
-      {isSuccess && <Toast message="Registration Successful" type="success" />}
+      {(isError || isSuccess) && statusMsg && (
+        <Toast
+          message={isError ? statusMsg : "Registration Successfull"}
+          type={isError ? "error" : "success"}
+        />
+      )}
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-gray-8200 dark:bg-gray-800 p-8 rounded-lg shadow-lg text-black dark:text-white flex flex-col gap-6"
