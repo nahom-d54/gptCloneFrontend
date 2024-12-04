@@ -46,7 +46,7 @@ function Profile() {
         </p>
         {(isError || isSuccess) && statusMsg && (
           <Toast
-            message={isError ? statusMsg : "Authentication Successfull"}
+            message={isError ? statusMsg : "Password Changed Successfully"}
             type={isError ? "error" : "success"}
           />
         )}
