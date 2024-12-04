@@ -6,6 +6,7 @@ import AuthLayout from "./layouts/AuthLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import HomePage from "./pages/HomePage";
+import Profile from "./pages/Profile";
 
 const AppRoutes = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const AppRoutes = createBrowserRouter([
       {
         path: `/chat/:chatId`,
         element: <HomePage />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
       },
     ],
   },
