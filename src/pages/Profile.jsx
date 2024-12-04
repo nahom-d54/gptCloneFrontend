@@ -20,7 +20,7 @@ function Profile() {
   const { values, errors, handleChange, handleSubmit } = useFormik({
     initialValues: {
       previousPassword: "",
-      password: "",
+      newPassword: "",
       confirmPassword: "",
     },
     validationSchema: editProfileSchema,
@@ -71,20 +71,20 @@ function Profile() {
           </div>
           <div className="flex flex-col gap-2">
             <label
-              htmlFor="password"
+              htmlFor="newPassword"
               className="text-sm font-semibold  text-black dark:text-white"
             >
               New Password
             </label>
             <input
               type="password"
-              name="password"
-              value={values.password}
+              name="newPassword"
+              value={values.newPassword}
               onChange={handleChange}
               className="bg-gray-300 dark:bg-gray-700 p-2 border border-gray-300 dark:border-gray-700 rounded-lg text-black dark:text-white"
             />
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password}</p>
+            {errors.newPassword && (
+              <p className="text-red-500 text-sm">{errors.newPassword}</p>
             )}
           </div>
           <div className="flex flex-col gap-2">
