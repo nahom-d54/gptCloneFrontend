@@ -11,9 +11,16 @@ import { BsChat } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 import { clearMessages } from "../features/chats/chatSlice";
+import { useState } from "react";
 
 const Sidebar = () => {
-  const { data: chatHistory } = useGetChatHistoryQuery({ page: 1, limit: 5 });
+  const [params, setParams] = useState({ page: 1, limit: 5 });
+  const { data: chatHistory, isError } = useGetChatHistoryQuery(params);
+
+  // eslint-disable-next-line no-unused-vars
+  const handleButtonClick = () => {
+    setParams({ page: 2, limit: 10 }); // Example of changing params
+  };
   const [deleteChat] = useDeleteChatMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,7 +28,7 @@ const Sidebar = () => {
     dispatch(clearMessages());
     navigate("/");
   };
-  console.log(chatHistory);
+
   return (
     <div className="scrollbar-trigger flex h-full w-full flex-1 items-start border-white/20">
       <nav className="flex h-full flex-1 flex-col space-y-1 p-2">
@@ -33,7 +40,7 @@ const Sidebar = () => {
           New chat
         </a>
         <div className="flex-col flex-1 overflow-y-auto border-b border-white/20">
-          <div className="flex flex-col gap-2 pb-2 text-gray-100 text-sm">
+          <div className="flex flex-col gap-2 pb-2 text-gray-100 text-sm h-full overflow-y-auto">
             {/* <a className="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all hover:pr-4 group">
               <FiMessageSquare className="h-4 w-4" />
               <div className="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative">
@@ -41,6 +48,12 @@ const Sidebar = () => {
                 <div className="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]"></div>
               </div>
             </a> */}
+
+            {isError && (
+              <div className="m-2 p-2 border-red-500 text-red-500 background-transparent">
+                Something went wrong
+              </div>
+            )}
 
             {chatHistory &&
               chatHistory?.[0].data.map((chat) => (
@@ -63,6 +76,11 @@ const Sidebar = () => {
                   </div>
                 </div>
               ))}
+            {chatHistory && chatHistory?.[0].nextPage && (
+              <button className="mt-auto text-white bg-transparent border-gray-300 border-[1px] rounded-sm px-3 py-2">
+                Load More
+              </button>
+            )}
           </div>
         </div>
         <a className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm">
