@@ -75,12 +75,12 @@ const MarkdownRenderer = ({ markdown }) => {
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      <div className="p-4 text-white rounded-md">
+      <div className="p-4 text-black dark:text-white rounded-md">
         <ReactMarkdown
           remarkPlugins={remarkPlugins}
           rehypePlugins={rehypePlugins}
           components={components}
-          className="prose prose-invert max-w-none prose-pre:p-0 prose-pre:m-0 prose-pre:bg-transparent"
+          className="ext-black dark:text-white  prose prose-invert max-w-none prose-pre:p-0 prose-pre:m-0 prose-pre:bg-transparent"
         >
           {markdown}
         </ReactMarkdown>
