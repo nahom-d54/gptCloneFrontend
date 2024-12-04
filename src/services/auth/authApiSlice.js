@@ -39,6 +39,13 @@ const authApiSlice = api.injectEndpoints({
         body: payload,
       }),
     }),
+    changePassword: builder.mutation({
+      query: (payload) => ({
+        url: "user/change-password",
+        method: "POST",
+        body: payload,
+      }),
+    }),
 
     resendVerificationEmail: builder.mutation({
       query: (payload) => ({
