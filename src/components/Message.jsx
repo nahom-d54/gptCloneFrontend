@@ -23,7 +23,7 @@ const Message = (props) => {
         <div className="text-base gap-4 md:gap-6 md:max-w-2xl lg:max-w-xl xl:max-w-3xl flex lg:px-0 m-auto w-full">
           <div className="flex flex-col sm:flex-row gap-4 md:gap-6 md:max-w-2xl lg:max-w-xl xl:max-w-3xl p-4 md:py-6 lg:px-0 m-auto w-full">
             <div className="w-8 flex flex-col relative items-end">
-              <div className="relative h-7 w-7 p-1 rounded-sm text-white flex items-center justify-center bg-black/75 text-opacity-100r">
+              <div className="relative h-7 w-7 p-1 rounded-sm text-white flex items-center justify-center bg-black/75 dark:bg-gray-700 text-opacity-100">
                 {isUser ? (
                   <HiUser className="h-4 w-4 text-white" />
                 ) : (
@@ -35,7 +35,9 @@ const Message = (props) => {
                   disabled
                   className="text-gray-300 dark:text-gray-400"
                 ></button>
-                <span className="flex-grow flex-shrink-0">1 / 1</span>
+                <span className="flex-grow flex-shrink-0 text-gray-800 dark:text-gray-100">
+                  1 / 1
+                </span>
                 <button
                   disabled
                   className="text-gray-300 dark:text-gray-400"
@@ -44,7 +46,7 @@ const Message = (props) => {
             </div>
             <div className="w-full">
               {!isUser && text === null ? (
-                <TbCursorText className="h-6 w-6 animate-pulse" />
+                <TbCursorText className="h-6 w-6 animate-pulse text-gray-800 dark:text-gray-100" />
               ) : (
                 <MarkdownRenderer markdown={text} />
               )}
