@@ -65,3 +65,7 @@ textarea,
     @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden;
   }
 }
+
+.infinite-scroll-component__outerdiv {
+  @apply w-full;
+}
