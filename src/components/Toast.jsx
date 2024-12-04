@@ -1,24 +1,32 @@
 import PropTypes from "prop-types";
+import { useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+import { useDarkMode } from "../hooks/useDarkMode";
 
 const Toast = ({ message, type }) => {
-  const getTypeStyles = (type) => {
+  const getTypeFunc = (type) => {
     switch (type) {
       case "success":
-        return "bg-green-500 text-white";
+        return toast.success;
       case "error":
-        return "bg-red-500 text-white";
+        return toast.error;
       case "warning":
-        return "bg-yellow-500 text-black";
+        return toast.warning;
       default:
-        return "bg-gray-500 text-white";
+        return toast;
     }
   };
+  const [isDarkMode] = useDarkMode();
 
-  return (
-    <div className={`absolute p-4 rounded-md shadow-md ${getTypeStyles(type)}`}>
-      {message}
-    </div>
-  );
+  useEffect(() => {
+    getTypeFunc(type)(message, {
+      theme: isDarkMode ? "dark" : "light",
+    });
+  }, [message, type, isDarkMode]);
+
+  return <ToastContainer position="top-right" autoClose={5000} />;
 };
 
 Toast.propTypes = {
