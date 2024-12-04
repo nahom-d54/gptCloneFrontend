@@ -1,36 +1,22 @@
 import ReactMarkdown from "react-markdown";
-import { createStarryNight } from "@wooorm/starry-night";
-import rehypeHighlight from "rehype-highlight";
-import rehypeSlug from "rehype-slug";
-import rehypeRaw from "rehype-raw";
+
 import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
-import sourceCss from "@wooorm/starry-night/source.css";
-import sourceJs from "@wooorm/starry-night/source.js";
-import sourceTsx from "@wooorm/starry-night/source.tsx";
-import sourceTs from "@wooorm/starry-night/source.ts";
-import textHtmlBasic from "@wooorm/starry-night/text.html.basic";
-import textMd from "@wooorm/starry-night/text.md";
+import rehypeHighlight from "rehype-highlight";
+import rehypeRaw from "rehype-raw";
+import rehypeSlug from "rehype-slug";
+
 import "highlight.js/styles/github-dark.css";
 import PropTypes from "prop-types";
-
-const grammars = [
-  sourceCss,
-  sourceJs,
-  sourceTsx,
-  sourceTs,
-  textHtmlBasic,
-  textMd,
-];
-
-createStarryNight(grammars);
 
 const MarkdownRenderer = ({ markdown }) => {
   const remarkPlugins = [remarkToc, remarkGfm];
   const rehypePlugins = [rehypeSlug, rehypeHighlight, rehypeRaw];
 
   const components = {
+    // eslint-disable-next-line no-unused-vars
     code: ({ node, inline, className, children, ...props }) => {
+      // eslint-disable-next-line no-unused-vars
       const match = /language-(\w+)/.exec(className || "");
       return !inline ? (
         <div className="relative">
